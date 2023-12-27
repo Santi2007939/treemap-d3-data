@@ -5,6 +5,7 @@ let ed;
 let cd;
 let canvas = d3.select("#canvas");
 let legend = d3.select("#legend");
+let tooltip = d3.select("#tooltip");
 
 let colors = [
     "#7bd3f3",
@@ -44,6 +45,22 @@ let map = () => {
                     return i["fips"] == id;
                 })
                 return county["bachelorsOrHigher"];
+            })
+            .on("mouseover", (e, i) => {
+                tooltip.transition()
+                    .style("visibility", "visible")
+
+                let id = i["id"];
+                let county = ed.find((i) => {
+                    return i["fips"] == id;
+                })
+
+                tooltip.text(county["fips"] + " - " + county["area_name"] + ", " + county["state"] + " : " + county["bachelorsOrHigher"] + "%");
+                tooltip.attr("data-education", county["bachelorsOrHigher"]);
+            })
+            .on("mouseout", (e, i) => {
+                tooltip.transition()
+                    .style("visibility", "hidden");
             })
 };
 

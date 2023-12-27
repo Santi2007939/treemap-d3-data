@@ -1,5 +1,6 @@
 html, body {
     min-height: 100%;
+    font-family: sans-serif;
 }
 
 body {
@@ -17,6 +18,22 @@ svg {
     min-height: 600px;
     min-width: 1000px;
     overflow: visible;
+}
+
+#legend {
+    font-size: 10px;
+}
+
+#legend rect {
+    height: 8px;
+}
+
+#legend text {
+    fill: currentColor;
+}
+
+#legend line {
+    stroke: currentColor;
 }
 
 #tooltip {

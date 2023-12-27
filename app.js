@@ -4,6 +4,7 @@ const urlCD = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choroplet
 let ed;
 let cd;
 let canvas = d3.select("#canvas");
+let legend = d3.select("#legend");
 
 let colors = [
     "#7bd3f3",
@@ -46,6 +47,22 @@ let map = () => {
             })
 };
 
+let desc = () => {
+    legend.selectAll("rect")
+                    .data(colors)
+                    .enter()
+                    .append("rect")
+                    .attr("fill", (i) => {return i})
+                    .attr("width", (i) => {
+                        return colors.indexOf(i) % 2 == 0 ? 33 : 32;
+                    })
+                    .attr("x", (i) => {
+                        let index = colors.indexOf(i);
+                        let num = Math.trunc(index/2);
+                        return index % 2 == 0 ? 600 + num * 65 : 600 + num * 65 + 33;
+                    })
+}
+
 fetch(urlCD)
     .then(response => response.json())
     .then(data => {
@@ -56,6 +73,7 @@ fetch(urlCD)
             .then(dat => {
                 ed = dat;
                 map();
+                desc();
             })
             .catch(err => console.error("Error fetching the information: ", err))
     })

@@ -24,11 +24,6 @@ body {
     margin-top: -14px;
 }
 
-#description a {
-    text-decoration: none;
-    color: #C6CF9B;
-}
-
 svg{
     background-color: #4159a8;
     padding: 10px;
@@ -38,26 +33,6 @@ svg{
 #canvas{
     min-height: 600px;
     min-width: 950px;
-}
-
-.county:hover{
-    fill: #F6ECA9;
-}
-
-#legend {
-    font-size: 10px;
-}
-
-#legend rect {
-    height: 8px;
-}
-
-#legend text {
-    fill: currentColor;
-}
-
-#legend line {
-    stroke: currentColor;
 }
 
 #tooltip {

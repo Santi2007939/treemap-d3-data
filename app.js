@@ -18,6 +18,7 @@ let treeMap = () => {
     })
 
     let movies = hierarchy.leaves();
+    console.log(movies[0]["data"]);
 
     let create = d3.treemap().size([1000,600]);
     create(hierarchy);
@@ -28,6 +29,27 @@ let treeMap = () => {
             .append("g")
             .append("rect")
             .attr("class", "tile")
+            .attr("fill", (e, i) => {
+                let category = movies[i]["data"]["category"];
+                switch (category) {
+                    case "Action":
+                        return "rgb(76, 146, 195)";
+                    case "Adventure":
+                        return "rgb(190, 210, 237)";
+                    case "Comedy":
+                        return "rgb(255, 153, 62)";
+                    case "Drama":
+                        return "rgb(255, 201, 147)";
+                    case "Animation":
+                        return "rgb(86, 179, 86)";
+                    case "Family":
+                        return "rgb(173, 229, 161)";
+                    default:
+                        return "rgb(222, 82, 83)";
+                }
+            })
+            .attr("data-name", (e, i) => {movies[i]["data"]["name"]})
+            .attr("data-category", (e, i) => {movies[i]["data"]["category"]})
 };
 
 fetch(urlMS)

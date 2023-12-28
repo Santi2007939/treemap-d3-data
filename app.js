@@ -1,10 +1,5 @@
-const urlKP = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/kickstarter-funding-data.json";
 const urlMS = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
-const urlGS = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/video-game-sales-data.json";
-
-let kp;
 let ms;
-let gs; 
 
 let canvas = d3.select("#canvas");
 let tooltip = d3.select("#tooltip");
@@ -13,28 +8,32 @@ let colors = [
 
 ];
 
-let aaa = () => {
-    
+let treeMap = () => {
+    let hierarchy = d3.hierarchy(ms, (node) => {
+        return node["children"];
+    }).sum((node) => {
+        return node["value"];
+    }).sort((nod1, nod2) => {
+        return nod2["value"] - nod1["value"];
+    })
+
+    let movies = hierarchy.leaves();
+
+    let create = d3.treemap().size([1000,600]);
+    create(hierarchy);
+
+    canvas.selectAll("g")
+            .data(movies)
+            .enter()
+            .append("g")
+            .append("rect")
+            .attr("class", "tile")
 };
 
-fetch(urlKP)
+fetch(urlMS)
     .then(response => response.json())
     .then(data => {
-        kp = data;
-        console.log(kp);
-        fetch(urlMS)
-            .then(response => response.json())
-            .then(data => {
-                ms = data;
-                console.log(ms);
-                fetch(urlGS)
-                    .then(response => response.json())
-                    .then(data => {
-                        gs = data;
-                        console.log(gs);
-                    })
-                    .catch(err => console.error("Error fetching the information: ", err));
-            })
-            .catch(err => console.error("Error fetching the information: ", err));
+        ms = data;
+        treeMap();
     })
     .catch(error => console.error("Error fetching the information:", error));

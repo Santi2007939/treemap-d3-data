@@ -4,10 +4,6 @@ let ms;
 let canvas = d3.select("#canvas");
 let tooltip = d3.select("#tooltip");
 
-let colors = [
-
-];
-
 let treeMap = () => {
     let hierarchy = d3.hierarchy(ms, (node) => {
         return node["children"];
@@ -23,14 +19,17 @@ let treeMap = () => {
     let create = d3.treemap().size([1000,600]);
     create(hierarchy);
 
-    canvas.selectAll("g")
-            .data(movies)
-            .enter()
-            .append("g")
-            .append("rect")
+    let block = canvas.selectAll("g")
+                    .data(movies)
+                    .enter()
+                    .append("g")
+                    .attr("transform", (i) => {
+                            return "translate(" + i["x0"] + ", " + i["y0"] + ")"
+                    });
+    block.append("rect")
             .attr("class", "tile")
-            .attr("fill", (e, i) => {
-                let category = movies[i]["data"]["category"];
+            .attr("fill", (i) => {
+                let category = i["data"]["category"];
                 switch (category) {
                     case "Action":
                         return "rgb(76, 146, 195)";
@@ -48,8 +47,31 @@ let treeMap = () => {
                         return "rgb(222, 82, 83)";
                 }
             })
-            .attr("data-name", (e, i) => {movies[i]["data"]["name"]})
-            .attr("data-category", (e, i) => {movies[i]["data"]["category"]})
+            .attr("data-name", (i) => {return i["data"]["name"]})
+            .attr("data-category", (i) => {return i["data"]["category"]})
+            .attr("data-value", (i) => {return i["data"]["value"]})
+            .attr("width", (i) => {return i["x1"] - i["x0"]})
+            .attr("height", (i) => {return i["y1"] - i["y0"]})
+            .on("mouseover", (e, i) => {
+                tooltip.transition()
+                            .style("visibility", "visible")
+                let value = i["data"]["value"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                tooltip.html(
+                    "$ " + value + "<hr />" + i["data"]["name"]
+                )
+                tooltip.attr("data-value", i["data"]["value"]); 
+            })
+            .on("mouseout", (e, i) => {
+                tooltip.transition()
+                            .style("visibility", "hidden")
+            })
+
+    block.append("text")
+            .text((i) => {
+                return i["data"]["name"];
+            })
+            .attr("x", 5)
+            .attr("y", 20)
 };
 
 fetch(urlMS)
